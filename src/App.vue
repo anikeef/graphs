@@ -4,15 +4,16 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
 import Graph from './components/Graph.vue';
 
-export default {
-  name: 'app',
+@Component({
   components: {
-    Graph
-  }
-}
+    Graph,
+  },
+})
+export default class App extends Vue {}
 </script>
 
 <style>
@@ -22,5 +23,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  margin-top: 60px;
 }
 </style>
