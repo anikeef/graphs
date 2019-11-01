@@ -8,18 +8,19 @@ export class Curve {
   // to support basic discontinuous functions like 1/x
   public fragments: Array<CurveFragment>
 
-  constructor({ curveFunction, interval, pointsPerUnit }: {
+  constructor({ curveFunction, xInterval, yInterval, pointsPerUnit }: {
     curveFunction: string;
-    interval: { from: number, to: number };
+    xInterval: Interval;
+    yInterval: Interval;
     pointsPerUnit: number;
   }) {
     const round = (x: number): number => Math.round(x * 100) / 100;
     const func = (x: number): number => evaluate(curveFunction, { x: round(x) });
     const stepLength = 1 / pointsPerUnit;
     this.fragments = [[]];
-    for (let x = interval.from; x <= interval.to; x += stepLength) {
+    for (let x = xInterval.from; x <= xInterval.to; x += stepLength) {
       const value = func(x);
-      if (this.isFunctionValueValid(value)) {
+      if (this.isFunctionValueValid(value) && this.isValueInInterval(value, yInterval)) {
         this.push(new Point({ x, y: value }));
       } else {
         this.startNewFragment();
@@ -46,6 +47,11 @@ export class Curve {
   private lastFragment(): CurveFragment {
     return this.fragments.slice(-1)[0];
   }
+
+  private isValueInInterval(value: number, interval: Interval) {
+    return interval.from <= value && value <= interval.to;
+  }
 }
 
 export type CurveFragment = Array<Point>;
+export type Interval = { from: number, to: number };

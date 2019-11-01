@@ -25,8 +25,14 @@
 <script lang='ts'>
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Point } from '../models/point';
-import { Curve } from '../models/curve';
+import { Curve, Interval } from '../models/curve';
 import GraphCurve from './GraphCurve.vue';
+
+// This constant defines which points outside visible area should be drawn. 
+// For example, if it is set to 1, only visible points will be drawn. If it is set to 4,
+// area of points to draw will be 4 times bigger than visible area.
+// This is currently used to prevent interrupting abrupt curves
+const Y_INTERVAL_MULTIPLE = 4;
 
 @Component({
   components: { GraphCurve }
@@ -35,35 +41,39 @@ export default class Graph extends Vue {
   @Prop() curveConfigs!: Array<{ func: string }>
   @Prop({ default: 640 }) width!: number;
   @Prop({ default: 380 }) height!: number;
-  @Prop({ default: 20 }) xInterval!: number;
-  @Prop({ default: 10 }) pointsPerUnit!: number;
+  @Prop({ default: 20 }) xLength!: number;
+  @Prop({ default: 32 }) pointsPerUnit!: number;
 
   public center: Point = new Point({ x: this.width/2, y: this.height/2 });
 
   // Returns length of one unit in pixels   
   get unitLength(): number {
-    return this.width / (this.xInterval);
+    return this.width / (this.xLength);
   }
 
-  get realInterval(): { from: number, to: number } {
+  get xInterval(): Interval {
     const from = this.pxToUnits(-this.center.x);
-    return { from, to: from + this.xInterval }
+    return { from, to: from + this.xLength };
+  }
+
+  get yInterval(): Interval {
+    const from = this.pxToUnits(-this.center.y);
+    return {
+      from: from * Y_INTERVAL_MULTIPLE, 
+      to: from + this.height * Y_INTERVAL_MULTIPLE / this.unitLength
+    };
   }
 
   get curves(): Array<Curve> {
     return this.curveConfigs.map(({ func }) => {
       return new Curve({ 
         curveFunction: func, 
-        interval: this.realInterval,
+        xInterval: this.xInterval,
+        yInterval: this.yInterval,
         pointsPerUnit: this.pointsPerUnit
       });
     });
   }
-
-  // get test() {
-  //   let curve = new Curve({ curveFunction: "x", interval: { from: -10, to: 10 }, pointsPerUnit: 1 });
-  //   return curve.fragments;
-  // }
 
   private pxToUnits(px: number) {
     return px / this.unitLength;

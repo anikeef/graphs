@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Graph :curveConfigs="[{ func: '1 / x' }]" />
+    <Graph :curveConfigs="[{ func: 'cos(x)' }]" />
   </div>
 </template>
 
