@@ -16,11 +16,14 @@
         <polyline :points="polyline" fill="none" stroke="red" />
 
       </svg>
+      {{ test }}
     </div>
 </template>
 
 <script lang='ts'>
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Point } from '../models/point';
+import { Curve } from '../models/curve';
 
 @Component({})
 export default class Graph extends Vue {
@@ -38,28 +41,36 @@ export default class Graph extends Vue {
   // This property is an array of points [x, y] in math units. It's computed by applying 
   // the function f() defined in props. Horizontal distance between points is 
   // defined by pointsPerUnit prop
-  get realPoints(): Array<Array<number>> {
+  get realPoints(): Array<Point> {
     const stepLength = 1 / this.pointsPerUnit;
     let points = [];
     for (let x = -this.xMax; x <= this.xMax; x += stepLength) {
-      points.push([x, this.f(x)]);
+      points.push(new Point({ x, y: this.f(x) }));
     }
     return points;
   }
 
   // This property returns realPoints converted to pixel values that will be drawn on a graph
-  get svgPoints(): Array<Array<number>> {
+  get svgPoints(): Array<Point> {
     return this.realPoints.map((point) => this.realPointToPx(point));
   }
 
   get polyline(): string {
-    return this.svgPoints.map((point) => point.join(',')).join(' ');
+    return this.svgPoints.map(({ x, y }) => `${x},${y}`).join(' ');
   }
 
   // Returns presentational version of purely mathematical point. It converts units to pixels,
   // flips the y-axis and aligns all points arount center
-  realPointToPx([x, y]: Array<number>): Array<number> {
-    return [x * this.unitLength + this.width/2, this.height - (y * this.unitLength + this.height/2)]
+  realPointToPx({ x, y }: Point): Point {
+    return new Point({
+      x: x * this.unitLength + this.width/2, 
+      y: this.height - (y * this.unitLength + this.height/2)
+    });
+  }
+
+  get test() {
+    let curve = new Curve({ curveFunction: "1/x", interval: { from: -10, to: 10 }, pointsPerUnit: 1 });
+    return curve.fragments;
   }
 }
 </script>
