@@ -13,7 +13,8 @@ export class Curve {
     interval: { from: number, to: number };
     pointsPerUnit: number;
   }) {
-    const func = (x: number): number => evaluate(curveFunction, { x });
+    const round = (x: number): number => Math.round(x * 100) / 100;
+    const func = (x: number): number => evaluate(curveFunction, { x: round(x) });
     const stepLength = 1 / pointsPerUnit;
     this.fragments = [[]];
     for (let x = interval.from; x <= interval.to; x += stepLength) {
@@ -47,4 +48,4 @@ export class Curve {
   }
 }
 
-type CurveFragment = Array<Point>;
+export type CurveFragment = Array<Point>;
