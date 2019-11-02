@@ -1,5 +1,5 @@
 <template>
-  <polyline :points="polyline" fill="none" stroke="red" />
+  <polyline :points="polyline" fill="none" :stroke="color" />
 </template>
 
 <script lang="ts">
@@ -12,6 +12,7 @@ export default class GraphCurveFragment extends Vue {
   @Prop() fragment!: CurveFragment;
   @Prop() unitLength!: number;
   @Prop() center!: Point;
+  @Prop() color!: string;
 
   get svgPoints(): Array<Point> {
     return this.fragment.map((point) => {

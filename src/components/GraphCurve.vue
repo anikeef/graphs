@@ -1,7 +1,7 @@
 <template>
   <g>
-    <GraphCurveFragment v-for="(fragment, index) of curve.fragments" 
-    :key="index" :fragment="fragment" :center="center" :unitLength="unitLength"/>
+    <GraphCurveFragment v-for="(fragment, index) of curveConfig.curve.fragments" 
+    :key="index" :fragment="fragment" :center="center" :unitLength="unitLength" :color="curveConfig.color" />
   </g>
 </template>
 
@@ -15,7 +15,7 @@ import { Point } from '../models/point';
   components: { GraphCurveFragment }
 })
 export default class GraphCurve extends Vue {
-  @Prop() curve!: Curve;
+  @Prop() curveConfig!: { curve: Curve, color: string };
   @Prop() center!: Point;
   @Prop() unitLength!: number;
 }

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Graph :curveConfigs="[{ func: 'cos(x)' }]" />
+    <Graph :curves="curves" />
   </div>
 </template>
 
@@ -13,7 +13,14 @@ import Graph from './components/Graph.vue';
     Graph,
   },
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  public curves = [
+    { func: 'cos(x)', color: 'red' },
+    { func: '-cos(x)', color: 'red' },
+    { func: 'sqrt(1 - x^2)', color: 'blue'},
+    { func: '-sqrt(1 - x^2)', color: 'blue'},
+  ]
+}
 </script>
 
 <style>

@@ -1,24 +1,16 @@
 <template>
   
     <div>
-      <!-- UnitLength: {{ unitLength }} Points: {{ svgPoints }} -->
       <svg version="1.1" class="graph"
         baseProfile="full"
         :width="width" :height="height"
         xmlns="http://www.w3.org/2000/svg">
 
-        <!-- Y-Axis -->
-        <line x1="50%" x2="50%" y1="0" y2="100%" stroke="black" stroke-width="1" />
-        <!-- X-Axis -->
-        <line x1="0" x2="100%" y1="50%" y2="50%" stroke="black" stroke-width="1" />
+        <GraphAxis :center="center" />
         <circle :cx="unitLength + width / 2" cy="50%" r="1" />
-        <!-- <circle v-for="(point, i) in svgPoints" :cx="point[0]" :cy="point[1]" r="1" :key="i" /> -->
-        <!-- <polyline :points="polyline" fill="none" stroke="red" /> -->
-        <GraphCurve v-for="(curve, index) of curves" :curve="curve" 
+        <GraphCurve v-for="(curve, index) of curveConfigs" :curveConfig="curve" 
         :unitLength="unitLength" :key="index" :center="center" />
-
       </svg>
-      <!-- {{ curves[0].fragments }} -->
     </div>
 </template>
 
@@ -27,6 +19,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Point } from '../models/point';
 import { Curve, Interval } from '../models/curve';
 import GraphCurve from './GraphCurve.vue';
+import GraphAxis from './GraphAxis.vue';
 
 // This constant defines which points outside visible area should be drawn. 
 // For example, if it is set to 1, only visible points will be drawn. If it is set to 4,
@@ -35,10 +28,10 @@ import GraphCurve from './GraphCurve.vue';
 const Y_INTERVAL_MULTIPLE = 4;
 
 @Component({
-  components: { GraphCurve }
+  components: { GraphCurve, GraphAxis }
 })
 export default class Graph extends Vue {
-  @Prop() curveConfigs!: Array<{ func: string }>
+  @Prop() curves!: Array<{ func: string, color: string }>;
   @Prop({ default: 640 }) width!: number;
   @Prop({ default: 380 }) height!: number;
   @Prop({ default: 20 }) xLength!: number;
@@ -64,14 +57,17 @@ export default class Graph extends Vue {
     };
   }
 
-  get curves(): Array<Curve> {
-    return this.curveConfigs.map(({ func }) => {
-      return new Curve({ 
-        curveFunction: func, 
-        xInterval: this.xInterval,
-        yInterval: this.yInterval,
-        pointsPerUnit: this.pointsPerUnit
-      });
+  get curveConfigs(): Array<{ curve: Curve, color: string }> {
+    return this.curves.map(({ func, color }) => {
+      return {
+        curve:  new Curve({ 
+          curveFunction: func, 
+          xInterval: this.xInterval,
+          yInterval: this.yInterval,
+          pointsPerUnit: this.pointsPerUnit
+        }),
+        color
+      }
     });
   }
 
