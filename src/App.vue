@@ -17,7 +17,7 @@ import { slope } from './helpers/slope';
   },
 })
 export default class App extends Vue {
-  public mainFunc = '1/(x)';
+  public mainFunc = '1/x';
   public curves = [
     { func: this.mainFunc, color: 'red' },
     // { func: slope('cos(x)', 1), color: 'black' }
@@ -31,13 +31,13 @@ export default class App extends Vue {
   ]
 
   handleMove(x: number): void {
-    this.points = [
-      { point: { x, y: evaluate(this.mainFunc, { x }) }, color: 'red' }
-    ],
-    this.curves = [
-      { func: this.mainFunc, color: 'red' },
-      { func: slope(this.mainFunc, x), color: 'grey' }
-    ]
+    // this.points = [
+    //   { point: { x, y: evaluate(this.mainFunc, { x }) }, color: 'red' }
+    // ],
+    // this.curves = [
+    //   { func: this.mainFunc, color: 'red' },
+    //   { func: slope(this.mainFunc, x), color: 'grey' }
+    // ]
   }
 }
 </script>

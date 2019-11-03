@@ -1,19 +1,22 @@
 <template>
   <g>
     <!-- Y-Axis -->
-    <line :x1="center.x" :x2="center.x" y1="0" y2="100%" :stroke="color" stroke-width="1" />
+    <line :x1="0" :x2="0" :y1="visibleArea.yMin" :y2="visibleArea.yMax" :stroke="color" :stroke-width="strokeWidth" />
     <!-- X-Axis -->
-    <line x1="0" x2="100%" :y1="center.y" :y2="center.y" :stroke="color" stroke-width="1" />
+    <line :x1="visibleArea.xMin" :x2="visibleArea.xMax" :y1="0" :y2="0" :stroke="color" :stroke-width="strokeWidth" />
   </g>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Point } from '../models/point';
+import { Interval } from '../models/interval';
+import { PlaneSection } from '../models/plane-section';
 
 @Component({})
 export default class GraphAxis extends Vue {
-  @Prop() center!: Point;
+  @Prop() visibleArea!: PlaneSection;
   @Prop({ default: '#aaa' }) color!: string;
+  @Prop() strokeWidth!: number;
 }
 </script>

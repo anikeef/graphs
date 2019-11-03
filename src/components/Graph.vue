@@ -5,15 +5,14 @@
         baseProfile="full"
         :width="width" :height="height"
         xmlns="http://www.w3.org/2000/svg"
-        @mousemove="handleMouseMove"
+        :viewBox="viewBox"
         ref="canvas">
 
-        <GraphAxis :center="center" />
-        <!-- <circle :cx="unitLength + width / 2" cy="50%" r="1" /> -->
-        <GraphCurve v-for="(curve, index) of curveConfigs" :curveConfig="curve" 
-        :unitLength="unitLength" :key="index" :center="center" />
-        <GraphPoint v-for="(point, index) of points" :pointConfig="point" :key="index" 
-        :unitLength="unitLength" :center="center"/>
+        <GraphAxis :visibleArea="visibleArea" :strokeWidth="strokeWidth" />
+        <GraphCurve v-for="curve of curves" :curveConfig="curve" :visibleArea="visibleArea" 
+        :key="curve.func" :pointsPerUnit="pointsPerUnit" :strokeWidth="strokeWidth" />
+        <GraphPoint v-for="point of points" :pointConfig="point" :radius="strokeWidth" 
+        :key="`${point.x} ${point.y}`" />
       </svg>
     </div>
 </template>
@@ -21,16 +20,10 @@
 <script lang='ts'>
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Point } from '../models/point';
-import { Curve, Interval } from '../models/curve';
+import { PlaneSection } from '../models/plane-section';
 import GraphCurve from './GraphCurve.vue';
 import GraphAxis from './GraphAxis.vue';
 import GraphPoint from './GraphPoint.vue';
-
-// This constant defines which points outside visible area should be drawn. 
-// For example, if it is set to 1, only visible points will be drawn. If it is set to 4,
-// area of points to draw will be 4 times bigger than visible area.
-// This is currently used to prevent interrupting abrupt curves
-const Y_INTERVAL_MULTIPLE = 4;
 
 @Component({
   components: { GraphCurve, GraphAxis, GraphPoint }
@@ -40,56 +33,44 @@ export default class Graph extends Vue {
   @Prop() points!: Array<{ point: Point, color: string }>;
   @Prop({ default: 640 }) width!: number;
   @Prop({ default: 380 }) height!: number;
-  @Prop({ default: 20 }) xLength!: number;
-  @Prop({ default: 32 }) pointsPerUnit!: number;
+  @Prop({ default: () => ({ min: -10, max: 10 }) }) xInterval!: { min: number, max: number };
 
-  public center: Point = new Point({ x: this.width/2, y: this.height/2 });
-
-  // Returns length of one unit in pixels   
-  get unitLength(): number {
-    return this.width / (this.xLength);
-  }
-
-  get xInterval(): Interval {
-    const from = this.pxToUnits(-this.center.x);
-    return { from, to: from + this.xLength };
-  }
-
-  get yInterval(): Interval {
-    const from = this.pxToUnits(-this.center.y);
-    return {
-      from: from * Y_INTERVAL_MULTIPLE, 
-      to: from + this.height * Y_INTERVAL_MULTIPLE / this.unitLength
-    };
-  }
-
-  get curveConfigs(): Array<{ curve: Curve, color: string }> {
-    return this.curves.map(({ func, color }) => {
-      return {
-        curve:  new Curve({ 
-          curveFunction: func, 
-          xInterval: this.xInterval,
-          yInterval: this.yInterval,
-          pointsPerUnit: this.pointsPerUnit
-        }),
-        color
-      }
+  public visibleArea = (() => {
+    const yLength = (this.xInterval.max - this.xInterval.min) * (this.height / this.width);
+    return new PlaneSection({
+      xMin: this.xInterval.min,
+      xMax: this.xInterval.max,
+      yMin: -yLength/2,
+      yMax: yLength/2
     });
+  })();
+
+  get pointsPerUnit(): number {
+    return this.width / this.visibleArea.width;
   }
 
-  handleMouseMove(event: { 
-    pageX: number, 
-    pageY: number, 
-    target: { getBoundingClientRect: () => { left: number } } 
-  }): void {
-    const { left } = (this.$refs.canvas as any).getBoundingClientRect();
-    const x = this.pxToUnits(event.pageX - left - this.center.x);
-    this.$emit('mousemove', x);
+  get viewBox(): string {
+    return `${ this.visibleArea.xMin } ${ this.visibleArea.yMin } ${ this.visibleArea.width } ${ this.visibleArea.height }`;
   }
 
-  private pxToUnits(px: number) {
-    return px / this.unitLength;
+  get strokeWidth(): number {
+    return this.pxToUnits(1);
   }
+
+  private pxToUnits(px: number): number {
+    const pxInUnits = this.visibleArea.width / this.width;
+    return px * pxInUnits;
+  }
+
+  // handleMouseMove(event: { 
+  //   pageX: number, 
+  //   pageY: number, 
+  //   target: { getBoundingClientRect: () => { left: number } } 
+  // }): void {
+  //   const { left } = (this.$refs.canvas as any).getBoundingClientRect();
+  //   const x = this.pxToUnits(event.pageX - left + this.minPoint.x);
+  //   this.$emit('mousemove', x);
+  // }
 }
 </script>
 
