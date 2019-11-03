@@ -4,12 +4,16 @@
       <svg version="1.1" class="graph"
         baseProfile="full"
         :width="width" :height="height"
-        xmlns="http://www.w3.org/2000/svg">
+        xmlns="http://www.w3.org/2000/svg"
+        @mousemove="handleMouseMove"
+        ref="canvas">
 
         <GraphAxis :center="center" />
-        <circle :cx="unitLength + width / 2" cy="50%" r="1" />
+        <!-- <circle :cx="unitLength + width / 2" cy="50%" r="1" /> -->
         <GraphCurve v-for="(curve, index) of curveConfigs" :curveConfig="curve" 
         :unitLength="unitLength" :key="index" :center="center" />
+        <GraphPoint v-for="(point, index) of points" :pointConfig="point" :key="index" 
+        :unitLength="unitLength" :center="center"/>
       </svg>
     </div>
 </template>
@@ -20,6 +24,7 @@ import { Point } from '../models/point';
 import { Curve, Interval } from '../models/curve';
 import GraphCurve from './GraphCurve.vue';
 import GraphAxis from './GraphAxis.vue';
+import GraphPoint from './GraphPoint.vue';
 
 // This constant defines which points outside visible area should be drawn. 
 // For example, if it is set to 1, only visible points will be drawn. If it is set to 4,
@@ -28,10 +33,11 @@ import GraphAxis from './GraphAxis.vue';
 const Y_INTERVAL_MULTIPLE = 4;
 
 @Component({
-  components: { GraphCurve, GraphAxis }
+  components: { GraphCurve, GraphAxis, GraphPoint }
 })
 export default class Graph extends Vue {
   @Prop() curves!: Array<{ func: string, color: string }>;
+  @Prop() points!: Array<{ point: Point, color: string }>;
   @Prop({ default: 640 }) width!: number;
   @Prop({ default: 380 }) height!: number;
   @Prop({ default: 20 }) xLength!: number;
@@ -69,6 +75,16 @@ export default class Graph extends Vue {
         color
       }
     });
+  }
+
+  handleMouseMove(event: { 
+    pageX: number, 
+    pageY: number, 
+    target: { getBoundingClientRect: () => { left: number } } 
+  }): void {
+    const { left } = (this.$refs.canvas as any).getBoundingClientRect();
+    const x = this.pxToUnits(event.pageX - left - this.center.x);
+    this.$emit('mousemove', x);
   }
 
   private pxToUnits(px: number) {

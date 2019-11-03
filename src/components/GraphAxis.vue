@@ -14,6 +14,6 @@ import { Point } from '../models/point';
 @Component({})
 export default class GraphAxis extends Vue {
   @Prop() center!: Point;
-  @Prop({ default: 'black' }) color!: string;
+  @Prop({ default: '#aaa' }) color!: string;
 }
 </script>

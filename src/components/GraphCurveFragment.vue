@@ -1,5 +1,6 @@
 <template>
   <polyline :points="polyline" fill="none" :stroke="color" />
+  <!-- <path :d="path" fill="transparent" :stroke="color" /> -->
 </template>
 
 <script lang="ts">
@@ -22,6 +23,11 @@ export default class GraphCurveFragment extends Vue {
 
   get polyline(): string {
     return this.svgPoints.map(({ x, y }) => `${x},${y}`).join(' ');
+  }
+
+  get path(): string {
+    const { x: startX, y: startY } = this.svgPoints[0];
+    return `M${startX} ${startY}` + this.svgPoints.slice(1).map(({ x, y }) => `L${x} ${y}`).join(' ');
   }
 
   // Returns presentational version of purely mathematical point. It converts units to pixels
