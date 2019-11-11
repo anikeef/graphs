@@ -1,7 +1,7 @@
 <template>
   <g>
     <GraphCurveFragment v-for="(fragment, index) of curve.fragments" 
-    :key="index" :points="fragment" :color="curveConfig.color" :strokeWidth="strokeWidth" />
+    :key="index" :points="fragment" :color="curveConfig.color" :strokeWidth="strokeWidth" :dasharray="curveConfig.dasharray" />
   </g>
 </template>
 
@@ -16,7 +16,7 @@ import { PlaneSection } from '../models/plane-section';
   components: { GraphCurveFragment }
 })
 export default class GraphCurve extends Vue {
-  @Prop() curveConfig!: { func: string, color: string };
+  @Prop() curveConfig!: CurveConfig;
   @Prop() visibleArea!: PlaneSection;
   @Prop() pointsPerUnit!: number;
   @Prop() strokeWidth!: number;
@@ -26,5 +26,12 @@ export default class GraphCurve extends Vue {
     visibleArea: this.visibleArea,
     pointsPerUnit: this.pointsPerUnit
   })
+}
+
+export interface CurveConfig {
+  func: string;
+  color?: string;
+  dasharray?: string;
+  fillInterval?: { min: number, max: number };
 }
 </script>

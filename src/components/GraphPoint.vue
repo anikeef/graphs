@@ -1,5 +1,6 @@
 <template>
-  <circle :cx="point.x" :cy="point.y" :r="radius" :fill="color" />
+  <circle :cx="pointConfig.point.x" :cy="pointConfig.point.y" :r="radius" 
+  :fill="pointConfig.color" />
 </template>
 
 <script lang="ts">
@@ -8,15 +9,17 @@ import { Point } from '../models/point';
 
 @Component({})
 export default class GraphPoint extends Vue {
-  @Prop() pointConfig!: { point: Point, color: string };
-  @Prop() radius!: number;
-
-  get point() {
-    return this.pointConfig.point;
+  @Prop() pointConfig!: PointConfig;
+  @Prop() pxInUnits!: number;
+  
+  get radius() {
+    return this.pointConfig.radius * this.pxInUnits;
   }
+}
 
-  get color() {
-    return this.pointConfig.color;
-  }
+export interface PointConfig {
+  point: Point;
+  color: string;
+  radius: number;
 }
 </script>

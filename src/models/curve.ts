@@ -1,6 +1,7 @@
 import { Point } from './point';
 import { evaluate } from 'mathjs';
 import { PlaneSection } from './plane-section';
+import { evaluateAt } from '@/helpers/slope';
 
 // This constant defines which points outside visible area should be drawn. 
 // For example, if it is set to 1, only visible points will be drawn. If it is set to 4,
@@ -20,7 +21,7 @@ export class Curve {
     pointsPerUnit: number
   }) {
     const round = (x: number): number => Math.round(x * 100) / 100;
-    const f = (x: number): number => evaluate(func, { x: round(x) });
+    const f = (x: number): number => evaluateAt(func, round(x));
     const stepLength = 1 / pointsPerUnit;
     this.fragments = [[]];
     for (let x = visibleArea.xMin; x <= visibleArea.xMax; x += stepLength) {
@@ -34,6 +35,7 @@ export class Curve {
         this.startNewFragment();
       }
     }
+    if (!this.lastFragment().length) this.fragments.pop(); // Remove empty [] at the end
   }
 
   private push(point: Point) {

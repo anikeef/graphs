@@ -1,26 +1,33 @@
 <template>
-  <div id="app">
-    <SlopeDemo />
+  <div class="slopeDemo">
+    <div class="slopeDemo__container">
+      <input v-model="mainFunc" />
+      <Graph :curves="curves" @mousemove="handleMove" :points="points" @mouseleave="handleLeave"
+      :width="600" />
+    </div>
+    <div class="slopeDemo__container">
+      <input disabled :value="derivative" />
+      <Graph :curves="derivativeCurves" :points="derivativePoints" @mousemove="handleMove" 
+      @mouseleave="handleLeave" :width="600" />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import Graph from './components/Graph.vue';
-// import { evaluate } from 'mathjs';
-import { Point } from './models/point';
-import { slope, derivative, evaluateAt } from './helpers/slope';
-import { CurveConfig } from './components/GraphCurve.vue';
-import { PointConfig } from './components/GraphPoint.vue';
-import SlopeDemo from './components/SlopeDemo.vue';
+import Graph from '../components/Graph.vue';
+import { Point } from '../models/point';
+import { slope, derivative, evaluateAt } from '../helpers/slope';
+import { CurveConfig } from '../components/GraphCurve.vue';
+import { PointConfig } from '../components/GraphPoint.vue';
 
 @Component({
   components: {
-    SlopeDemo
+    Graph
   },
 })
-export default class App extends Vue {
-  public mainFunc = 'x';
+export default class SlopeDemo extends Vue {
+  public mainFunc = '1/x';
   public hover = false;
   public x = 0;
 
@@ -64,14 +71,8 @@ export default class App extends Vue {
 }
 </script>
 
-<style>
-
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style lang="scss">
+.slopeDemo {
+  display: flex;
 }
 </style>

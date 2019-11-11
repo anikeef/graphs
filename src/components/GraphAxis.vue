@@ -9,8 +9,6 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { Point } from '../models/point';
-import { Interval } from '../models/interval';
 import { PlaneSection } from '../models/plane-section';
 
 @Component({})

@@ -1,36 +1,33 @@
 <template>
-  
-    <div>
-      <svg version="1.1" class="graph"
-        baseProfile="full"
-        :width="width" :height="height"
-        xmlns="http://www.w3.org/2000/svg"
-        :viewBox="viewBox"
-        ref="canvas">
+  <svg version="1.1" class="graph"
+    baseProfile="full" @mousemove="handleMouseMove" @mouseleave="$emit('mouseleave')"
+    :width="width" :height="height"
+    xmlns="http://www.w3.org/2000/svg"
+    :viewBox="viewBox"
+    ref="canvas">
 
-        <GraphAxis :visibleArea="visibleArea" :strokeWidth="strokeWidth" />
-        <GraphCurve v-for="curve of curves" :curveConfig="curve" :visibleArea="visibleArea" 
-        :key="curve.func" :pointsPerUnit="pointsPerUnit" :strokeWidth="strokeWidth" />
-        <GraphPoint v-for="point of points" :pointConfig="point" :radius="strokeWidth" 
-        :key="`${point.x} ${point.y}`" />
-      </svg>
-    </div>
+    <GraphAxis :visibleArea="visibleArea" :strokeWidth="strokeWidth" />
+    <GraphCurve v-for="curve of curves" :curveConfig="curve" :visibleArea="visibleArea" 
+    :key="curve.func" :pointsPerUnit="pointsPerUnit" :strokeWidth="strokeWidth" />
+    <GraphPoint v-for="point of points" :pointConfig="point" :pxInUnits="strokeWidth" 
+    :key="`${point.x} ${point.y}`" />
+  </svg>
 </template>
 
 <script lang='ts'>
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Point } from '../models/point';
 import { PlaneSection } from '../models/plane-section';
-import GraphCurve from './GraphCurve.vue';
+import GraphCurve, { CurveConfig } from './GraphCurve.vue';
 import GraphAxis from './GraphAxis.vue';
-import GraphPoint from './GraphPoint.vue';
+import GraphPoint, { PointConfig } from './GraphPoint.vue';
 
 @Component({
   components: { GraphCurve, GraphAxis, GraphPoint }
 })
 export default class Graph extends Vue {
-  @Prop() curves!: Array<{ func: string, color: string }>;
-  @Prop() points!: Array<{ point: Point, color: string }>;
+  @Prop() curves!: Array<CurveConfig>;
+  @Prop() points!: Array<PointConfig>;
   @Prop({ default: 640 }) width!: number;
   @Prop({ default: 380 }) height!: number;
   @Prop({ default: () => ({ min: -10, max: 10 }) }) xInterval!: { min: number, max: number };
@@ -62,15 +59,15 @@ export default class Graph extends Vue {
     return px * pxInUnits;
   }
 
-  // handleMouseMove(event: { 
-  //   pageX: number, 
-  //   pageY: number, 
-  //   target: { getBoundingClientRect: () => { left: number } } 
-  // }): void {
-  //   const { left } = (this.$refs.canvas as any).getBoundingClientRect();
-  //   const x = this.pxToUnits(event.pageX - left + this.minPoint.x);
-  //   this.$emit('mousemove', x);
-  // }
+  handleMouseMove(event: { 
+    pageX: number, 
+    pageY: number, 
+    target: { getBoundingClientRect: () => { left: number } } 
+  }): void {
+    const { left } = (this.$refs.canvas as any).getBoundingClientRect();
+    const x = this.visibleArea.xMin + this.pxToUnits(event.pageX - left);
+    this.$emit('mousemove', x);
+  }
 }
 </script>
 
