@@ -10,11 +10,7 @@ import { Point } from '../models/point';
 @Component({})
 export default class GraphPoint extends Vue {
   @Prop() pointConfig!: PointConfig;
-  @Prop() pxInUnits!: number;
-  
-  get radius() {
-    return this.pointConfig.radius * this.pxInUnits;
-  }
+  @Prop() radius!: number;
 }
 
 export interface PointConfig {

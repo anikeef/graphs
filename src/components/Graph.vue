@@ -6,10 +6,10 @@
     :viewBox="viewBox"
     ref="canvas">
 
-    <GraphAxis :visibleArea="visibleArea" :strokeWidth="strokeWidth" />
+    <GraphAxis :visibleArea="visibleArea" :strokeWidth="pxInUnits" />
     <GraphCurve v-for="curve of curves" :curveConfig="curve" :visibleArea="visibleArea" 
-    :key="curve.func" :pointsPerUnit="pointsPerUnit" :strokeWidth="strokeWidth" />
-    <GraphPoint v-for="point of points" :pointConfig="point" :pxInUnits="strokeWidth" 
+    :key="curve.func" :pointsPerUnit="pointsPerUnit" :strokeWidth="pxInUnits" />
+    <GraphPoint v-for="point of points" :pointConfig="point" :radius="pxInUnits * point.radius" 
     :key="`${point.x} ${point.y}`" />
   </svg>
 </template>
@@ -50,7 +50,7 @@ export default class Graph extends Vue {
     return `${ this.visibleArea.xMin } ${ this.visibleArea.yMin } ${ this.visibleArea.width } ${ this.visibleArea.height }`;
   }
 
-  get strokeWidth(): number {
+  get pxInUnits(): number {
     return this.pxToUnits(1);
   }
 

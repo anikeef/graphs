@@ -1,12 +1,18 @@
 <template>
   <div class="slopeDemo">
     <div class="slopeDemo__container">
-      <input v-model="mainFunc" />
+      <div class="slopeDemo__inputContainer">
+        <div class="slopeDemo__inputLabel">f(x) =</div>
+        <input v-model="mainFunc" class="slopeDemo__input" />
+      </div>
       <Graph :curves="curves" @mousemove="handleMove" :points="points" @mouseleave="handleLeave"
       :width="600" />
     </div>
     <div class="slopeDemo__container">
-      <input disabled :value="derivative" />
+      <div class="slopeDemo__inputContainer">
+        <div class="slopeDemo__inputLabel">f'(x) =</div>
+        <input disabled :value="derivative" class="slopeDemo__input" />
+      </div>
       <Graph :curves="derivativeCurves" :points="derivativePoints" @mousemove="handleMove" 
       @mouseleave="handleLeave" :width="600" />
     </div>
@@ -74,5 +80,21 @@ export default class SlopeDemo extends Vue {
 <style lang="scss">
 .slopeDemo {
   display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  &__inputContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__input {
+    outline: none;
+    padding: 5px 10px;
+    margin: 10px;
+    border-radius: 3px;
+    border: 1px solid black;
+  }
 }
 </style>
