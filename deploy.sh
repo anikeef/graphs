@@ -9,8 +9,8 @@ npm run build
 # navigate into the build output directory
 cd dist
 
+git init
 git add -A
 git commit -m 'deploy'
-git push origin master
-
+git push -f https://github.com/anikeef/graphs-deploy.git master:gh-pages
 cd -

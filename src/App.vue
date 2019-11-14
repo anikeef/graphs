@@ -6,12 +6,6 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import Graph from './components/Graph.vue';
-// import { evaluate } from 'mathjs';
-import { Point } from './models/point';
-import { slope, derivative, evaluateAt } from './helpers/slope';
-import { CurveConfig } from './components/GraphCurve.vue';
-import { PointConfig } from './components/GraphPoint.vue';
 import SlopeDemo from './components/SlopeDemo.vue';
 
 @Component({
@@ -19,58 +13,12 @@ import SlopeDemo from './components/SlopeDemo.vue';
     SlopeDemo
   },
 })
-export default class App extends Vue {
-  public mainFunc = 'x';
-  public hover = false;
-  public x = 0;
-
-  get derivative(): string {
-    return derivative(this.mainFunc);
-  }
-
-  get curves(): Array<CurveConfig> {
-    return (this.hover) ? [
-      { func: this.mainFunc, color: 'red' },
-      { func: slope(this.mainFunc, this.x), color: 'grey'}
-    ] : [{ func: this.mainFunc, color: 'red' }];
-  }
-
-  get derivativeCurves(): Array<CurveConfig> {
-    return [{ func: this.derivative, color: 'blue' }];
-  }
-
-  get points(): Array<PointConfig> {
-    const value = evaluateAt(this.mainFunc, this.x) 
-    return (this.hover && isFinite(value)) ? [
-      { point: { x: this.x, y: value }, color: 'red', radius: 3 }
-    ] : [];
-  }
-
-  get derivativePoints(): Array<PointConfig> {
-    const value = evaluateAt(this.derivative, this.x);
-    return (this.hover && isFinite(value)) ? [
-      { point: { x: this.x, y: value }, color: 'blue', radius: 3 }
-    ] : [];
-  }
-
-  handleMove(x: number): void {
-    this.hover = true;
-    this.x = x;
-  }
-
-  handleLeave(): void {
-    this.hover = false;
-  }
-}
+export default class App extends Vue {}
 </script>
 
 <style>
-
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   margin-top: 60px;
 }
