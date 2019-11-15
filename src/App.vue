@@ -17,9 +17,15 @@ export default class App extends Vue {}
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  color: #2c3e50;
-  margin-top: 60px;
+* {
+  padding: 0;
+  margin: 0;
+}
+
+#app,
+body,
+html {
+  height: 100%;
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
 }
 </style>

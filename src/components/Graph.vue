@@ -6,7 +6,7 @@
     :viewBox="viewBox"
     ref="canvas">
 
-    <GraphAxis :visibleArea="visibleArea" :strokeWidth="pxInUnits" />
+    <GraphAxis :visibleArea="visibleArea" :strokeWidth="pxInUnits" :color="axisColor" />
     <GraphCurve v-for="curve of curves" :curveConfig="curve" :visibleArea="visibleArea" 
     :key="curve.func" :pointsPerUnit="pointsPerUnit" :strokeWidth="pxInUnits" />
     <GraphPoint v-for="point of points" :pointConfig="point" :radius="pxInUnits * point.radius" 
@@ -31,6 +31,7 @@ export default class Graph extends Vue {
   @Prop({ default: 640 }) width!: number;
   @Prop({ default: 380 }) height!: number;
   @Prop({ default: () => ({ min: -10, max: 10 }) }) xInterval!: { min: number, max: number };
+  @Prop({ default: 'black' }) axisColor!: string;
 
   public visibleArea = (() => {
     const yLength = (this.xInterval.max - this.xInterval.min) * (this.height / this.width);
