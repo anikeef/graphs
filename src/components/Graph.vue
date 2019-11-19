@@ -6,7 +6,7 @@
     :viewBox="viewBox"
     ref="canvas">
 
-    <GraphAxis :visibleArea="visibleArea" :strokeWidth="pxInUnits" :color="axisColor" />
+    <GraphAxis :visibleArea="visibleArea" :pxInUnits="pxInUnits" :color="axisColor" />
     <GraphCurve v-for="curve of curves" :curveConfig="curve" :visibleArea="visibleArea" 
     :key="curve.func" :pointsPerUnit="pointsPerUnit" :strokeWidth="pxInUnits" />
     <GraphPoint v-for="point of points" :pointConfig="point" :radius="pxInUnits * point.radius" 
