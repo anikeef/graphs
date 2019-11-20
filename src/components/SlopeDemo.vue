@@ -1,35 +1,29 @@
 <template>
   <div class="slopeDemo">
-    <div class="slopeDemo__container">
-      <div class="slopeDemo__inputContainer">
-        <div class="slopeDemo__inputLabel">f(x) =</div>
-        <input v-model="mainFunc" class="slopeDemo__input" />
-      </div>
-      <Graph :curves="curves" @mousemove="handleMove" :points="points" @mouseleave="handleLeave"
-      :width="600" :axisColor="axisColor" />
-    </div>
-    <div class="slopeDemo__container">
-      <div class="slopeDemo__inputContainer">
-        <div class="slopeDemo__inputLabel">f'(x) =</div>
-        <input disabled :value="derivative" class="slopeDemo__input" />
-      </div>
-      <Graph :curves="derivativeCurves" :points="derivativePoints" @mousemove="handleMove" 
-      @mouseleave="handleLeave" :width="600" :axisColor="axisColor" />
+    <h1 class="slopeDemo__title">Derivative as a slope</h1>
+    <div class="slopeDemo__containers">
+      <SlopeDemoContainer label="f(x) =" v-model="mainFunc" :curves="curves" :points="points" :graphWidth="600"
+      :axisColor="axisColor" @mousemove="handleMove" @mouseleave="handleLeave" />
+      <SlopeDemoContainer label="f'(x) =" v-model="derivative" :curves="derivativeCurves" 
+      :points="derivativePoints" :graphWidth="600" :axisColor="axisColor" @mousemove="handleMove" 
+      @mouseleave="handleLeave" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import Graph from '../components/Graph.vue';
+import Graph from './Graph.vue';
 import { Point } from '../models/point';
 import { slope, derivative, evaluateAt } from '../helpers/slope';
-import { CurveConfig } from '../components/GraphCurve.vue';
-import { PointConfig } from '../components/GraphPoint.vue';
+import { CurveConfig } from './GraphCurve.vue';
+import { PointConfig } from './GraphPoint.vue';
+import SlopeDemoContainer from './SlopeDemoContainer.vue';
 
 @Component({
   components: {
-    Graph
+    Graph,
+    SlopeDemoContainer
   },
 })
 export default class SlopeDemo extends Vue {
@@ -83,9 +77,6 @@ export default class SlopeDemo extends Vue {
 
 <style lang="scss">
 .slopeDemo {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
   background-color: black;
   height: 100%;
   color: rgb(233, 233, 233);
@@ -109,8 +100,14 @@ export default class SlopeDemo extends Vue {
     background-color: rgb(41, 41, 41);
   }
 
-  &__container {
-    padding: 20px;
+  &__containers {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  &__title {
+    padding: 40px 60px;
+    text-align: center;
   }
 }
 </style>
