@@ -94,6 +94,7 @@ export default class SlopeDemo extends Vue {
     display: flex;
     align-items: center;
     justify-content: center;
+    // font-weight: 800;
   }
 
   &__input {
@@ -103,8 +104,13 @@ export default class SlopeDemo extends Vue {
     border-radius: 7px;
     border: 1px solid black;
     font-family: inherit;
+    font-size: 14px;
     color: white;
-    background-color: rgb(54, 54, 54);
+    background-color: rgb(41, 41, 41);
+  }
+
+  &__container {
+    padding: 20px;
   }
 }
 </style>

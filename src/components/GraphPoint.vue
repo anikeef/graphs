@@ -1,5 +1,5 @@
 <template>
-  <circle :cx="pointConfig.point.x" :cy="pointConfig.point.y" :r="radius" 
+  <circle :cx="pointConfig.point.x" :cy="pointConfig.point.y" :r="pointConfig.radius * pxInUnits" 
   :fill="pointConfig.color" />
 </template>
 
@@ -10,7 +10,7 @@ import { Point } from '../models/point';
 @Component({})
 export default class GraphPoint extends Vue {
   @Prop() pointConfig!: PointConfig;
-  @Prop() radius!: number;
+  @Prop() pxInUnits!: number;
 }
 
 export interface PointConfig {

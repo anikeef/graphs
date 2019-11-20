@@ -1,15 +1,14 @@
 <template>
   <svg version="1.1" class="graph"
     baseProfile="full" @mousemove="handleMouseMove" @mouseleave="$emit('mouseleave')"
-    :width="width" :height="height"
     xmlns="http://www.w3.org/2000/svg"
     :viewBox="viewBox"
+    :width="width"
     ref="canvas">
-
     <GraphAxis :visibleArea="visibleArea" :pxInUnits="pxInUnits" :color="axisColor" />
     <GraphCurve v-for="curve of curves" :curveConfig="curve" :visibleArea="visibleArea" 
     :key="curve.func" :pointsPerUnit="pointsPerUnit" :strokeWidth="pxInUnits" />
-    <GraphPoint v-for="point of points" :pointConfig="point" :radius="pxInUnits * point.radius" 
+    <GraphPoint v-for="point of points" :pointConfig="point" :pxInUnits="pxInUnits"
     :key="`${point.x} ${point.y}`" />
   </svg>
 </template>
@@ -28,27 +27,24 @@ import GraphPoint, { PointConfig } from './GraphPoint.vue';
 export default class Graph extends Vue {
   @Prop() curves!: Array<CurveConfig>;
   @Prop() points!: Array<PointConfig>;
-  @Prop({ default: 640 }) width!: number;
-  @Prop({ default: 380 }) height!: number;
+  @Prop() width!: number;
   @Prop({ default: () => ({ min: -10, max: 10 }) }) xInterval!: { min: number, max: number };
+  @Prop({ default: () => ({ min: -6, max: 6 }) }) yInterval!: { min: number, max: number };
   @Prop({ default: 'black' }) axisColor!: string;
 
-  public visibleArea = (() => {
-    const yLength = (this.xInterval.max - this.xInterval.min) * (this.height / this.width);
-    return new PlaneSection({
-      xMin: this.xInterval.min,
-      xMax: this.xInterval.max,
-      yMin: -yLength/2,
-      yMax: yLength/2
-    });
-  })();
-
-  get pointsPerUnit(): number {
-    return this.width / this.visibleArea.width;
-  }
+  public visibleArea = new PlaneSection({
+    xMin: this.xInterval.min,
+    xMax: this.xInterval.max,
+    yMin: this.yInterval.min,
+    yMax: this.yInterval.max
+  });
 
   get viewBox(): string {
     return `${ this.visibleArea.xMin } ${ this.visibleArea.yMin } ${ this.visibleArea.width } ${ this.visibleArea.height }`;
+  }
+
+  get pointsPerUnit(): number {
+    return this.width / this.visibleArea.width;
   }
 
   get pxInUnits(): number {
@@ -62,8 +58,7 @@ export default class Graph extends Vue {
 
   handleMouseMove(event: { 
     pageX: number, 
-    pageY: number, 
-    target: { getBoundingClientRect: () => { left: number } } 
+    pageY: number
   }): void {
     const { left } = (this.$refs.canvas as any).getBoundingClientRect();
     const x = this.visibleArea.xMin + this.pxToUnits(event.pageX - left);

@@ -26,6 +26,7 @@ export default class App extends Vue {}
 body,
 html {
   height: 100%;
-  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
 }
 </style>
