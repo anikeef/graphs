@@ -2,7 +2,8 @@
   <div class="slopeDemo__container">
     <div class="slopeDemo__inputContainer">
       <div class="slopeDemo__inputLabel">{{ label }}</div>
-      <input @input="$emit('input', $event.target.value)" :value="value" class="slopeDemo__input" />
+      <input @input="$emit('input', $event.target.value)" :value="value" class="slopeDemo__input" 
+      :disabled="disabled" />
     </div>
     <Graph :curves="curves" @mousemove="$emit('mousemove', $event)" :points="points" @mouseleave="$emit('mouseleave', $event)"
     :width="graphWidth" :axisColor="axisColor" />
@@ -27,5 +28,6 @@ export default class SlopeDemoContainer extends Vue {
   @Prop() points!: Array<PointConfig>;
   @Prop() graphWidth!: number;
   @Prop() axisColor!: string;
+  @Prop({ default: false }) disabled!: boolean;
 }
 </script>

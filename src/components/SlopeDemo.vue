@@ -6,7 +6,7 @@
       :axisColor="axisColor" @mousemove="handleMove" @mouseleave="handleLeave" />
       <SlopeDemoContainer label="f'(x) =" v-model="derivative" :curves="derivativeCurves" 
       :points="derivativePoints" :graphWidth="600" :axisColor="axisColor" @mousemove="handleMove" 
-      @mouseleave="handleLeave" />
+      @mouseleave="handleLeave" :disabled="true" />
     </div>
   </div>
 </template>
@@ -31,7 +31,7 @@ export default class SlopeDemo extends Vue {
   public readonly funcColor = 'rgb(253, 53, 66)';
   public readonly derivativeColor = 'rgb(93, 192, 214)';
   public readonly slopeColor = 'white';
-  public mainFunc = '1/x';
+  public mainFunc = '1/cos(x)';
   public hover = false;
   public x = 0;
 
