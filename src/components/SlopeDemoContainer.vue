@@ -3,7 +3,7 @@
     <div class="slopeDemo__inputContainer">
       <div class="slopeDemo__inputLabel">{{ label }}</div>
       <input @input="$emit('input', $event.target.value)" :value="value" class="slopeDemo__input" 
-      :disabled="disabled" />
+      :disabled="disabled" :autofocus="!disabled"/>
     </div>
     <Graph :curves="curves" @mousemove="$emit('mousemove', $event)" :points="points" @mouseleave="$emit('mouseleave', $event)"
     :width="graphWidth" :axisColor="axisColor" />
