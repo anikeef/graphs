@@ -2,9 +2,9 @@
   <div class="slopeDemo">
     <h1 class="slopeDemo__title">Derivative as a slope</h1>
     <div class="slopeDemo__containers">
-      <SlopeDemoContainer label="f(x) =" v-model="mainFunc" :curves="curves" :points="points" :graphWidth="600"
+      <SlopeDemoContainer label="y(x) =" v-model="mainFunc" :curves="curves" :points="points" :graphWidth="600"
       :axisColor="axisColor" @mousemove="handleMove" @mouseleave="handleLeave" />
-      <SlopeDemoContainer label="f'(x) =" v-model="derivative" :curves="derivativeCurves" 
+      <SlopeDemoContainer label="y'(x) =" v-model="derivative" :curves="derivativeCurves" 
       :points="derivativePoints" :graphWidth="600" :axisColor="axisColor" @mousemove="handleMove" 
       @mouseleave="handleLeave" :disabled="true" />
     </div>
@@ -85,7 +85,6 @@ export default class SlopeDemo extends Vue {
     display: flex;
     align-items: center;
     justify-content: center;
-    // font-weight: 800;
   }
 
   &__input {
