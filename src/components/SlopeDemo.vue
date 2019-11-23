@@ -105,7 +105,7 @@ export default class SlopeDemo extends Vue {
   }
 
   &__title {
-    padding: 40px 60px;
+    padding: 60px 0 40px;
     text-align: center;
   }
 }
