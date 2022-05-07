@@ -1,6 +1,6 @@
 <template>
   <div class="slopeDemo">
-    <h1 class="slopeDemo__title">Derivative as a slope</h1>
+    <h1 class="slopeDemo__title">Draw my slope</h1>
     <div class="slopeDemo__containers">
       <SlopeDemoContainer label="y(x) =" v-model="mainFunc" :curves="curves" :points="points" :graphWidth="600"
       :axisColor="axisColor" @mousemove="handleMove" @mouseleave="handleLeave" />
